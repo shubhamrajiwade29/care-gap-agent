@@ -12,6 +12,38 @@ public with sharing class CareGapService {
         return new CareGapSelector().selectOpenByPatient(patientId);
     }
 
+    /**
+     * Mark a single gap Scheduled or Closed from the record-page LWC.
+     * Enforces object/field update access, validates the transition, stamps Closed_Date__c.
+     */
+    @AuraEnabled
+    public static void updateGapStatus(Id gapId, String newStatus) {
+        if (gapId == null || (newStatus != 'Scheduled' && newStatus != 'Closed')) {
+            throw new AuraHandledException('A care gap and a status of Scheduled or Closed are required.');
+        }
+        if (!Schema.sObjectType.Care_Gap__c.isUpdateable()
+            || !Schema.sObjectType.Care_Gap__c.fields.Status__c.isUpdateable()
+            || !Schema.sObjectType.Care_Gap__c.fields.Closed_Date__c.isUpdateable()) {
+            throw new AuraHandledException('You do not have permission to update care gaps.');
+        }
+        List<Care_Gap__c> found;
+        try {
+            found = new CareGapSelector().selectById(gapId);
+        } catch (System.QueryException e) {
+            throw new AuraHandledException('You do not have permission to view care gaps.');
+        }
+        if (found.isEmpty()) {
+            throw new AuraHandledException('Care gap not found.');
+        }
+        Care_Gap__c gap = found[0];
+        if (gap.Status__c == 'Closed') {
+            throw new AuraHandledException('This care gap is already closed.');
+        }
+        gap.Status__c = newStatus;
+        gap.Closed_Date__c = newStatus == 'Closed' ? Date.today() : null;
+        update gap;
+    }
+
     /** Close a set of gaps (bulk-safe). Caller must have update access. */
     public static void closeGaps(List<Care_Gap__c> gaps) {
         if (gaps == null || gaps.isEmpty()) {

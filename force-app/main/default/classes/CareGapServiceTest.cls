@@ -76,4 +76,85 @@ private class CareGapServiceTest {
         });
         System.assert(!s.contains('overdue') && !s.contains('OVERDUE'), s);
     }
+
+    private static Care_Gap__c firstOpenGap() {
+        return [SELECT Id FROM Care_Gap__c WHERE Gap_Type__c = 'A1C Test' LIMIT 1];
+    }
+
+    @isTest
+    static void updateGapStatus_marksScheduled() {
+        Care_Gap__c g = firstOpenGap();
+        Test.startTest();
+        CareGapService.updateGapStatus(g.Id, 'Scheduled');
+        Test.stopTest();
+        Care_Gap__c after = [SELECT Status__c, Closed_Date__c FROM Care_Gap__c WHERE Id = :g.Id];
+        System.assertEquals('Scheduled', after.Status__c);
+        System.assertEquals(null, after.Closed_Date__c);
+    }
+
+    @isTest
+    static void updateGapStatus_closesAndStampsDate() {
+        Care_Gap__c g = firstOpenGap();
+        CareGapService.updateGapStatus(g.Id, 'Closed');
+        Care_Gap__c after = [SELECT Status__c, Closed_Date__c FROM Care_Gap__c WHERE Id = :g.Id];
+        System.assertEquals('Closed', after.Status__c);
+        System.assertEquals(Date.today(), after.Closed_Date__c);
+    }
+
+    @isTest
+    static void updateGapStatus_rejectsBadInputAndClosedGaps() {
+        Care_Gap__c g = firstOpenGap();
+        for (List<Object> args : new List<List<Object>>{
+            new List<Object>{ null, 'Closed' },
+            new List<Object>{ g.Id, 'Open' },
+            new List<Object>{ g.Id, null }
+        }) {
+            try {
+                CareGapService.updateGapStatus((Id) args[0], (String) args[1]);
+                System.assert(false, 'Expected AuraHandledException');
+            } catch (AuraHandledException e) {
+                System.assert(true);
+            }
+        }
+        CareGapService.updateGapStatus(g.Id, 'Closed');
+        try {
+            CareGapService.updateGapStatus(g.Id, 'Scheduled');
+            System.assert(false, 'Closed gaps must not be reopened');
+        } catch (AuraHandledException e) {
+            System.assert(true);
+        }
+    }
+
+    @isTest
+    static void updateGapStatus_notFoundThrows() {
+        Care_Gap__c g = firstOpenGap();
+        Id gone = g.Id;
+        delete g;
+        try {
+            CareGapService.updateGapStatus(gone, 'Closed');
+            System.assert(false, 'Expected not found');
+        } catch (AuraHandledException e) {
+            System.assert(true);
+        }
+    }
+
+    @isTest
+    static void updateGapStatus_deniedWithoutAccess() {
+        Care_Gap__c g = firstOpenGap();
+        Profile p = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+        User u = new User(
+            Alias = 'nogap', Email = 'nogap@example.com', Username = 'nogap' + System.currentTimeMillis() + '@example.com',
+            LastName = 'NoAccess', ProfileId = p.Id, TimeZoneSidKey = 'America/New_York',
+            LocaleSidKey = 'en_US', EmailEncodingKey = 'UTF-8', LanguageLocaleKey = 'en_US');
+        insert u;
+        System.runAs(u) {
+            try {
+                CareGapService.updateGapStatus(g.Id, 'Closed');
+                System.assert(false, 'User without the permission set must be denied');
+            } catch (AuraHandledException e) {
+                System.assert(true);
+            }
+        }
+        System.assertEquals('Open', [SELECT Status__c FROM Care_Gap__c WHERE Id = :g.Id].Status__c);
+    }
 }

@@ -12,7 +12,22 @@
                                     &nbsp;&middot;&nbsp;due <lightning-formatted-date-time value={g.due}></lightning-formatted-date-time>
                                 </template>
                             </span>
-                            <lightning-badge label={g.priority} variant={g.variant}></lightning-badge>
+                            <span class="slds-grid slds-grid_vertical-align-center">
+                                <template lwc:if={g.isScheduled}>
+                                    <lightning-badge label="Scheduled" class="slds-m-right_x-small"></lightning-badge>
+                                </template>
+                                <lightning-badge label={g.priority} variant={g.variant}></lightning-badge>
+                                <lightning-button-menu alternative-text="Update care gap" icon-size="x-small"
+                                    menu-alignment="right" data-id={g.id} onselect={handleAction} disabled={saving}>
+                                    <template lwc:if={g.isScheduled}>
+                                        <lightning-menu-item value="Closed" label="Close gap"></lightning-menu-item>
+                                    </template>
+                                    <template lwc:else>
+                                        <lightning-menu-item value="Scheduled" label="Mark scheduled"></lightning-menu-item>
+                                        <lightning-menu-item value="Closed" label="Close gap"></lightning-menu-item>
+                                    </template>
+                                </lightning-button-menu>
+                            </span>
                         </li>
                     </template>
                 </ul>

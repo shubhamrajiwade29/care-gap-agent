@@ -14,6 +14,16 @@ public with sharing class CareGapSelector {
         ];
     }
 
+    public List<Care_Gap__c> selectById(Id gapId) {
+        return [
+            SELECT Id, Gap_Type__c, Status__c, Priority__c, Due_Date__c, Closed_Date__c, Patient__c
+            FROM Care_Gap__c
+            WHERE Id = :gapId
+            WITH SECURITY_ENFORCED
+            LIMIT 1
+        ];
+    }
+
     public Map<Id, List<Care_Gap__c>> selectOpenByPatients(Set<Id> patientIds) {
         Map<Id, List<Care_Gap__c>> byPatient = new Map<Id, List<Care_Gap__c>>();
         for (Id pid : patientIds) {
