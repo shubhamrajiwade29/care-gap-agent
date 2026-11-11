@@ -12,6 +12,7 @@
         <object>Care_Gap__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <applicationVisibilities><application>Care_Management</application><visible>true</visible></applicationVisibilities>
     <fieldPermissions>
         <editable>true</editable>
         <field>Care_Gap__c.Due_Date__c</field>
