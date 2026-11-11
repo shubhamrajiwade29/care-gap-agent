@@ -4,6 +4,8 @@ An AI-assisted care-gap tracker for healthcare teams. It flags a patient's overd
 
 Built by Shubham Rajiwade to demonstrate Agentforce + healthcare domain + Apex/LWC developer skill in one coherent app.
 
+**Case study:** [docs/CASE_STUDY.md](docs/CASE_STUDY.md) — the problem, design decisions, a bulk bug the tests caught, and what I learned.
+
 ## The problem
 
 Care coordinators waste time hunting across records to see which patients are overdue for screenings (A1C, mammogram, colonoscopy, etc.). Gaps get missed; follow-ups slip.
