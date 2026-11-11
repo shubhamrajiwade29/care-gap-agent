@@ -42,14 +42,35 @@ sf apex run -o caregap -f scripts/data/seed.apex          # demo patients + gaps
 Then add the **Patient Care Summary** LWC to the Contact record page (Lightning App Builder) if your
 org's page doesn't already include it, and open a seeded patient such as *Maria Alvarez*.
 
-## Agentforce (needs an Agentforce-enabled org)
-1. Setup → Agentforce → enable.
-2. New agent topic "Patient Care Gaps"; add two actions: **Find Patient By Name** (name → `patientId`) and
-   **Get Patient Care Gaps** (takes `patientId`, returns `summary`).
-3. Instructions: resolve the patient first; if several match, ask which one; never invent gaps; report the action's `summary`.
-4. Give the agent's running user the **Care Gap Manager** permission set.
-> If your org isn't Agentforce-enabled, everything else still runs — the invocable action
-> also works as a **Flow** action, so you can demo it from a screen Flow in the meantime.
+## Agentforce agent: "Care Gap Assistant"
+Built in Agentforce Builder (Agent Script) on an Agentforce-enabled Developer Edition org and tested in the
+Builder's Live Test on the activated version. It is **not** deployed by this repo (see "Not in the repo" below).
+
+**Topic: Patient Care Gaps**, with two Apex actions that are deployed by this repo:
+1. **Find Patient By Name** (`FindPatientByName`): `patientName` → `patientId`, `matchCount`, `message`.
+2. **Get Patient Care Gaps** (`GetPatientCareGaps`): `patientId` → `summary`, `openGapCount`. The summary flags
+   overdue gaps explicitly ("OVERDUE by 26 days") using the same rule as the reminder job.
+
+Topic instructions (summary): identify the patient first; if several match, ask which one; never invent gaps;
+reply in one or two natural sentences with each gap's type, priority and due date; say "overdue" only when the
+tool marks a gap OVERDUE.
+
+Example (seeded data): *"What care gaps does Maria Alvarez have?"* → *"Maria Alvarez has two open care gaps: an A1C
+Test (high priority, overdue since 10/15/2026) and a Mammogram (medium priority, upcoming, due 12/1/2026)."*
+
+**Verified in Live Test:** name → gaps chain (full name, last name only, first name only), no false "overdue" for
+an upcoming gap, unknown patient (no invented gaps), off-topic redirect.
+**Not verified live:** the "several patients match, ask which one" path. The Apex side returns candidates with
+DOB and is unit-tested, but the agent has not been exercised against duplicate names.
+
+Setup notes
+- The agent's running user needs the **Care Gap Manager** permission set (queries use `WITH SECURITY_ENFORCED`).
+- Set the action outputs (`message`, `summary`, `openGapCount`) to `is_displayable: False`; otherwise the platform
+  prints the raw tool output under the agent's reply.
+
+**Not in the repo:** the agent itself (`AiAuthoringBundle` `Care_Gap_Assistant_1`). Rebuild it from the
+description above, or retrieve it once the project's `sourceApiVersion` supports that metadata type.
+> No Agentforce org? Everything else still runs; the invocable actions also work from a screen Flow.
 
 ## Note on Health Cloud
 Modeled on standard objects (Contact as patient + `Care_Gap__c`) so it deploys to **any**
