@@ -24,4 +24,6 @@
     </fieldPermissions>
     <classAccesses><apexClass>CareGapService</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>GetPatientCareGaps</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>FindPatientByName</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>PatientSelector</apexClass><enabled>true</enabled></classAccesses>
 </PermissionSet>
