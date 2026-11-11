@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Gap_Type__c</fullName><label>Gap Type</label><type>Picklist</type><required>true</required>
+    <valueSet><valueSetDefinition><sorted>false</sorted>
+        <value><fullName>A1C Test</fullName><default>false</default><label>A1C Test</label></value>
+        <value><fullName>Mammogram</fullName><default>false</default><label>Mammogram</label></value>
+        <value><fullName>Blood Pressure Check</fullName><default>false</default><label>Blood Pressure Check</label></value>
+        <value><fullName>Colonoscopy</fullName><default>false</default><label>Colonoscopy</label></value>
+        <value><fullName>Flu Vaccine</fullName><default>false</default><label>Flu Vaccine</label></value>
+        <value><fullName>Depression Screening</fullName><default>false</default><label>Depression Screening</label></value>
+    </valueSetDefinition></valueSet>
+</CustomField>

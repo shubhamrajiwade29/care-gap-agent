@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>A care gap for a patient (e.g., overdue screening or lab). Models Health Cloud care-gap tracking on standard objects so it deploys to any Developer org. In a Health Cloud org, Patient__c maps to the Health Cloud patient record.</description>
+    <label>Care Gap</label>
+    <pluralLabel>Care Gaps</pluralLabel>
+    <nameField><label>Care Gap Number</label><type>AutoNumber</type><displayFormat>CG-{0000}</displayFormat></nameField>
+    <sharingModel>ReadWrite</sharingModel>
+    <enableReports>true</enableReports>
+    <enableActivities>true</enableActivities>
+</CustomObject>

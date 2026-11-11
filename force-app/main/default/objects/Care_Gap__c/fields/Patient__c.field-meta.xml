@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Patient__c</fullName><label>Patient</label><type>Lookup</type>
+    <referenceTo>Contact</referenceTo><deleteConstraint>Restrict</deleteConstraint><relationshipLabel>Care Gaps</relationshipLabel>
+    <relationshipName>Care_Gaps</relationshipName><required>true</required>
+</CustomField>

@@ -1,0 +1,4 @@
+[
+{"sobject":"Contact","saveRefs":true,"resolveRefs":false,"files":["Contacts.json"]},
+{"sobject":"Care_Gap__c","saveRefs":false,"resolveRefs":true,"files":["Care_Gap__c.json"]}
+]

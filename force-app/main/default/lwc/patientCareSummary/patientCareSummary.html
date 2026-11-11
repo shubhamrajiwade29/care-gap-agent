@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Open Care Gaps" icon-name="standard:health_cloud">
+        <span slot="actions" class="slds-badge">{count}</span>
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={hasGaps}>
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={gaps} for:item="g">
+                        <li key={g.id} class="slds-item slds-grid slds-grid_align-spread slds-p-vertical_x-small">
+                            <span>
+                                <strong>{g.type}</strong>
+                                <template lwc:if={g.due}>
+                                    &nbsp;&middot;&nbsp;due <lightning-formatted-date-time value={g.due}></lightning-formatted-date-time>
+                                </template>
+                            </span>
+                            <lightning-badge label={g.priority} variant={g.variant}></lightning-badge>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template lwc:elseif={error}>
+                <p class="slds-text-color_error">{error}</p>
+            </template>
+            <template lwc:else>
+                <p class="slds-text-color_success slds-p-vertical_small">No open care gaps. 🎉</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

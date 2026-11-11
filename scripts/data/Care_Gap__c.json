@@ -1,0 +1,8 @@
+{"records":[
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef1"},"Patient__c":"@ContactRef1","Gap_Type__c":"A1C Test","Status__c":"Open","Priority__c":"High","Due_Date__c":"2026-10-15"},
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef2"},"Patient__c":"@ContactRef1","Gap_Type__c":"Mammogram","Status__c":"Open","Priority__c":"Medium","Due_Date__c":"2026-12-01"},
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef3"},"Patient__c":"@ContactRef1","Gap_Type__c":"Flu Vaccine","Status__c":"Closed","Priority__c":"Low","Due_Date__c":"2026-09-30","Closed_Date__c":"2026-10-02"},
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef4"},"Patient__c":"@ContactRef2","Gap_Type__c":"Colonoscopy","Status__c":"Open","Priority__c":"High","Due_Date__c":"2026-09-01"},
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef5"},"Patient__c":"@ContactRef2","Gap_Type__c":"Blood Pressure Check","Status__c":"Scheduled","Priority__c":"Medium","Due_Date__c":"2026-11-20"},
+{"attributes":{"type":"Care_Gap__c","referenceId":"GapRef6"},"Patient__c":"@ContactRef3","Gap_Type__c":"Depression Screening","Status__c":"Open","Priority__c":"Low","Due_Date__c":"2027-01-15"}
+]}
