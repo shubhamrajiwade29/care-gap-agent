@@ -4,7 +4,7 @@ An AI-assisted care-gap tracker for healthcare teams. It flags a patient's overd
 
 Built by Shubham Rajiwade to demonstrate Agentforce + healthcare domain + Apex/LWC developer skill in one coherent app.
 
-**Case study:** [docs/CASE_STUDY.md](docs/CASE_STUDY.md) — the problem, design decisions, a bulk bug the tests caught, and what I learned.
+**Case study:** See [CASE_STUDY.md](CASE_STUDY.md) for the full write-up — the problem, design decisions, a bulk bug the tests caught, and what I learned.
 
 ## The problem
 

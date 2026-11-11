@@ -85,6 +85,46 @@ version of the same rule is included as a draft alternative.)
 
 ---
 
+## Architecture
+
+Every entry point — the LWC, the Agentforce agent, and the scheduled job — reaches data
+through the same Service → Selector layers. No SOQL in the UI or the agent; no duplicated
+logic.
+
+```mermaid
+flowchart TD
+  LWC["Patient Care LWC<br/>Contact record page"]
+  AGENT["Agentforce agent<br/>Care Gap Assistant"]
+  SCHED["Reminder job<br/>scheduled daily 7am"]
+  FIND["FindPatientByName<br/>invocable Apex"]
+  GET["GetPatientCareGaps<br/>invocable Apex"]
+  SVC["CareGapService<br/>business logic, FLS checks"]
+  SEL["CareGapSelector<br/>SOQL, WITH SECURITY_ENFORCED"]
+  GAP[("Care_Gap__c<br/>custom object")]
+  CON[("Contact<br/>patient")]
+  TASK[("Task<br/>follow-up")]
+
+  LWC --> SVC
+  AGENT --> FIND
+  AGENT --> GET
+  FIND --> SVC
+  GET --> SVC
+  SCHED --> SVC
+  SVC --> SEL
+  SEL --> GAP
+  SEL --> CON
+  SVC --> TASK
+
+  classDef ui fill:#E6F1FB,stroke:#185FA5,color:#0C447C;
+  classDef ai fill:#EEEDFE,stroke:#534AB7,color:#3C3489;
+  classDef apex fill:#E1F5EE,stroke:#0F6E56,color:#085041;
+  classDef data fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A;
+  class LWC,AGENT,SCHED ui;
+  class FIND,GET ai;
+  class SVC,SEL apex;
+  class GAP,CON,TASK data;
+```
+
 ## Technical highlights
 
 - **Enterprise Apex patterns** — Selector/Service separation, `WITH SECURITY_ENFORCED`
