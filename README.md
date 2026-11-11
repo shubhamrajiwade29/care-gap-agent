@@ -44,7 +44,8 @@ org's page doesn't already include it, and open a seeded patient such as *Maria 
 
 ## Agentforce agent: "Care Gap Assistant"
 Built in Agentforce Builder (Agent Script) on an Agentforce-enabled Developer Edition org and tested in the
-Builder's Live Test on the activated version. It is **not** deployed by this repo (see "Not in the repo" below).
+Builder's Live Test on the activated version. The agent definition is version-controlled in
+`force-app/main/default/aiAuthoringBundles/Care_Gap_Assistant/` (retrieved from the org; requires `sourceApiVersion` 65.0+).
 
 **Topic: Patient Care Gaps**, with two Apex actions that are deployed by this repo:
 1. **Find Patient By Name** (`FindPatientByName`): `patientName` → `patientId`, `matchCount`, `message`.
@@ -68,8 +69,8 @@ Setup notes
 - Set the action outputs (`message`, `summary`, `openGapCount`) to `is_displayable: False`; otherwise the platform
   prints the raw tool output under the agent's reply.
 
-**Not in the repo:** the agent itself (`AiAuthoringBundle` `Care_Gap_Assistant_1`). Rebuild it from the
-description above, or retrieve it once the project's `sourceApiVersion` supports that metadata type.
+**Deploying the agent to another org:** `sf project deploy start` includes the bundle. Afterwards open it in
+Agentforce Builder, check the actions resolve, then activate it. The agent's running user needs **Care Gap Manager**.
 > No Agentforce org? Everything else still runs; the invocable actions also work from a screen Flow.
 
 ## Note on Health Cloud
