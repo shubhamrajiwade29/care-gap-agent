@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <description>Declarative alternative to CareGapReminderScheduler: daily, flags Open care gaps due on or before today as High priority and creates a follow-up Task on the patient. Activate this OR the Apex scheduler, not both.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>TaskSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Overdue care gap: &quot; &amp; TEXT({!$Record.Gap_Type__c})</expression>
+    </formulas>
+    <interviewLabel>Overdue Care Gap Follow-up {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Overdue Care Gap Follow-up</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value><stringValue>AUTO_LAYOUT_CANVAS</stringValue></value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <decisions>
+        <name>Is_Overdue</name>
+        <label>Is Overdue?</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Not due yet</defaultConnectorLabel>
+        <rules>
+            <name>Due_On_Or_Before_Today</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Due_Date__c</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue><elementReference>$Flow.CurrentDate</elementReference></rightValue>
+            </conditions>
+            <connector><targetReference>Flag_High_Priority</targetReference></connector>
+            <label>Due on or before today</label>
+        </rules>
+    </decisions>
+    <recordUpdates>
+        <name>Flag_High_Priority</name>
+        <label>Flag High Priority</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <connector><targetReference>Create_Follow_up_Task</targetReference></connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>$Record.Id</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>Priority__c</field>
+            <value><stringValue>High</stringValue></value>
+        </inputAssignments>
+        <object>Care_Gap__c</object>
+    </recordUpdates>
+    <recordCreates>
+        <name>Create_Follow_up_Task</name>
+        <label>Create Follow-up Task</label>
+        <locationX>176</locationX>
+        <locationY>539</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value><elementReference>$Flow.CurrentDate</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value><stringValue>High</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value><stringValue>Not Started</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value><elementReference>TaskSubject</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhoId</field>
+            <value><elementReference>$Record.Patient__c</elementReference></value>
+        </inputAssignments>
+        <object>Task</object>
+    </recordCreates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector><targetReference>Is_Overdue</targetReference></connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value><stringValue>Open</stringValue></value>
+        </filters>
+        <object>Care_Gap__c</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2026-11-12</startDate>
+            <startTime>07:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

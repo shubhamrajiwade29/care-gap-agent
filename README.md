@@ -14,11 +14,21 @@ for screenings (A1C, mammogram, colonoscopy, etc.). Gaps get missed; follow-ups 
 
 ## What it does
 - **Care Gap data model** (`Care_Gap__c`) — type, status, priority, due date, linked to the patient (Contact).
-- **Record-page LWC** (`patientCareSummary`) — shows a patient's open gaps with priority badges.
+- **Record-page LWC** (`patientCareSummary`) — shows a patient's open gaps with priority badges, and a per-row menu to **Mark scheduled** or **Close** a gap (`CareGapService.updateGapStatus`, with object/field update checks; closed gaps can't be reopened).
+- **Care Management app** — dedicated Lightning app (Home, Contacts, Care Gaps, Reports, Dashboards) with a **Care Gaps** tab and list views *All Open Gaps*, *Overdue*, *High Priority*.
+- **Reports + dashboard** — *Open Gaps by Type*, *Open Gaps by Priority* and a *Care Gap Overview* dashboard.
 - **Agentforce action** (`GetPatientCareGaps`) — invocable Apex returning a natural-language summary + count, so an Agentforce agent can answer questions about a patient.
 - **Agentforce action** (`FindPatientByName`) — invocable Apex that resolves a spoken name ("Maria Alvarez") to a Contact Id, or lists candidates when ambiguous, so the agent can chain it into `GetPatientCareGaps`.
 - **Scheduled job** (`CareGapReminderScheduler`) — each morning, flags overdue open gaps as High priority and creates follow-up Tasks.
 - **Apex architecture** — Selector / Service layers, `WITH SECURITY_ENFORCED`, bulk-safe, with test classes (incl. 200-record bulk tests).
+
+## Overdue follow-up: Apex scheduler **or** Flow
+Two interchangeable implementations of the same rule (Status = Open and due on/before today → High priority +
+follow-up Task on the patient). **Run one, not both**, or each overdue gap gets duplicate Tasks.
+- **Apex:** `System.schedule('Care Gap Reminders','0 0 7 * * ?', new CareGapReminderScheduler());` — tested.
+- **Flow:** `Overdue Care Gap Follow-up` (scheduled-triggered, daily 07:00 UTC). Deployed as **Draft**; open it in
+  Flow Builder, debug it against a seeded overdue gap, then activate. *Not run-tested here: scheduled flows only
+  fire at their start time, so it was validated by deploy only.*
 
 ## Architecture
 ```
