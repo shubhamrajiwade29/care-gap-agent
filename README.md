@@ -60,9 +60,8 @@ Example (seeded data): *"What care gaps does Maria Alvarez have?"* → *"Maria A
 Test (high priority, overdue since 10/15/2026) and a Mammogram (medium priority, upcoming, due 12/1/2026)."*
 
 **Verified in Live Test:** name → gaps chain (full name, last name only, first name only), no false "overdue" for
-an upcoming gap, unknown patient (no invented gaps), off-topic redirect.
-**Not verified live:** the "several patients match, ask which one" path. The Apex side returns candidates with
-DOB and is unit-tested, but the agent has not been exercised against duplicate names.
+an upcoming gap, unknown patient (no invented gaps), off-topic redirect, and ambiguity: with two patients named Maria
+the agent lists both and asks which one instead of guessing.
 
 Setup notes
 - The agent's running user needs the **Care Gap Manager** permission set (queries use `WITH SECURITY_ENFORCED`).
