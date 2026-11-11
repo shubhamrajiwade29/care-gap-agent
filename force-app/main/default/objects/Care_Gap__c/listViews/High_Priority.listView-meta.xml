@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>High_Priority</fullName>
+    <label>High Priority</label>
+    <filterScope>Everything</filterScope>
+    <columns>NAME</columns>
+    <columns>Patient__c</columns>
+    <columns>Gap_Type__c</columns>
+    <columns>Status__c</columns>
+    <columns>Due_Date__c</columns>
+    <filters>
+        <field>Status__c</field>
+        <operation>notEqual</operation>
+        <value>Closed</value>
+    </filters>
+    <filters>
+        <field>Priority__c</field>
+        <operation>equals</operation>
+        <value>High</value>
+    </filters>
+</ListView>

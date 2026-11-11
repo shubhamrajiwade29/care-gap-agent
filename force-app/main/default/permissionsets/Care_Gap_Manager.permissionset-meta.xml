@@ -26,4 +26,5 @@
     <classAccesses><apexClass>GetPatientCareGaps</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>FindPatientByName</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>PatientSelector</apexClass><enabled>true</enabled></classAccesses>
+    <tabSettings><tab>Care_Gap__c</tab><visibility>Visible</visibility></tabSettings>
 </PermissionSet>
