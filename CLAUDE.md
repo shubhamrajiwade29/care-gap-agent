@@ -16,10 +16,10 @@ This is a ready-to-build SFDX starter. Finish and verify it against a real org.
 
 ## 🔌 Org setup (this project's target org)
 Target org: **Agentforce-enabled Developer Edition** — alias `caregap`
-Domain: `<your-dev-org>.develop.my.salesforce.com` (Agentforce, Einstein, Data Cloud, Default model provider all confirmed ON).
+Domain: `<your-org>.develop.my.salesforce.com` (Agentforce, Einstein, Data Cloud, Default model provider all confirmed ON).
 
 ```bash
-# 1. Authorize the org (opens browser; log into the <your-dev-org> org)
+# 1. Authorize the org (opens browser; log into your Developer Edition org)
 sf org login web -a caregap
 
 # 2. Deploy the project
